@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Chave · CRM para Corretores</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',
+            400:'#34d399',500:'#10b981',600:'#059669',700:'#047857',
+            800:'#065f46',900:'#064e3b'
+          },
+          ink: {
+            50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',
+            400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',
+            800:'#1e293b',900:'#0f172a'
+          }
+        },
+        fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+      }
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{ -webkit-tap-highlight-color: transparent; }
+  body{ font-family:'Inter',sans-serif; }
+  ::-webkit-scrollbar{ width:8px; height:8px; }
+  ::-webkit-scrollbar-thumb{ background:#cbd5e1; border-radius:8px; }
+  .view{ display:none; }
+  .view.active{ display:block; animation: fade .25s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .slide{ transition: transform .3s cubic-bezier(.4,0,.2,1); }
+  .nav-item.active{ color:#059669; }
+  .nav-item.active .nav-ico{ background:#ecfdf5; }
+  .kanban-col::-webkit-scrollbar{ display:none; }
+</style>
+</head>
+<body class="bg-ink-100 text-ink-800">
+
+<!-- ============ APP SHELL (telefone) ============ -->
+<div class="min-h-screen flex items-center justify-center p-0 sm:p-6">
+  <div id="device" class="relative w-full sm:w-[420px] bg-ink-50 sm:rounded-[2.2rem] sm:shadow-2xl sm:border-8 sm:border-ink-900 overflow-hidden min-h-screen sm:min-h-[860px] sm:max-h-[860px] flex flex-col">
+
+    <!-- Topbar -->
+    <header id="topbar" class="sticky top-0 z-30 bg-white/80 backdrop-blur border-b border-ink-200">
+      <div class="px-5 pt-4 pb-3 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-brand-600 grid place-items-center shadow-sm">
+            <i data-lucide="key-round" class="w-5 h-5 text-white"></i>
+          </div>
+          <div>
+            <p id="topTitle" class="font-extrabold text-ink-900 leading-none text-base">Wallacy Corretor</p>
+            <p id="topSub" class="text-[11px] text-ink-400 mt-0.5">Bom dia, Wallacy 👋 · Ubá-MG</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="relative w-9 h-9 grid place-items-center rounded-xl hover:bg-ink-100">
+            <i data-lucide="bell" class="w-5 h-5 text-ink-500"></i>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+          </button>
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 grid place-items-center text-white text-xs font-bold">WC</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Conteúdo rolável -->
+    <main id="scroll" class="flex-1 overflow-y-auto pb-28">
+
+      <!-- ============================= INÍCIO ============================= -->
+      <section id="view-inicio" class="view active px-5 pt-4">
+        <!-- Banner de leads quentes -->
+        <div class="rounded-2xl bg-gradient-to-br from-brand-600 to-brand-700 text-white p-4 shadow-lg shadow-brand-600/20 mb-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-brand-100 text-xs font-medium">Leads aguardando resposta</p>
+              <p class="text-3xl font-extrabold mt-0.5">3 novos</p>
+              <p class="text-brand-100 text-xs mt-1">⏱ o mais antigo há 14 min</p>
+            </div>
+            <button onclick="go('funil')" class="bg-white/15 hover:bg-white/25 rounded-xl px-3 py-2 text-sm font-semibold backdrop-blur flex items-center gap-1">
+              Responder <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- KPIs -->
+        <div class="grid grid-cols-2 gap-3 mb-5">
+          <div class="bg-white rounded-2xl p-4 border border-ink-200/70">
+            <div class="flex items-center gap-2 text-ink-400 text-xs font-medium"><i data-lucide="calendar-check" class="w-4 h-4"></i> Visitas hoje</div>
+            <p class="text-2xl font-extrabold text-ink-900 mt-1">2</p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-ink-200/70">
+            <div class="flex items-center gap-2 text-ink-400 text-xs font-medium"><i data-lucide="file-signature" class="w-4 h-4"></i> Propostas</div>
+            <p class="text-2xl font-extrabold text-ink-900 mt-1">4 <span class="text-sm font-semibold text-ink-400">ativas</span></p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-ink-200/70">
+            <div class="flex items-center gap-2 text-ink-400 text-xs font-medium"><i data-lucide="users" class="w-4 h-4"></i> Clientes ativos</div>
+            <p class="text-2xl font-extrabold text-ink-900 mt-1">68</p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-ink-200/70">
+            <div class="flex items-center gap-2 text-ink-400 text-xs font-medium"><i data-lucide="wallet" class="w-4 h-4"></i> Comissão (mês)</div>
+            <p class="text-2xl font-extrabold text-brand-600 mt-1">R$ 18k <span class="text-sm font-semibold text-ink-400">prev.</span></p>
+          </div>
+        </div>
+
+        <!-- Tarefas do dia -->
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="font-bold text-ink-900">Suas tarefas de hoje</h3>
+          <button onclick="go('agenda')" class="text-brand-600 text-sm font-semibold">Ver agenda</button>
+        </div>
+        <div class="space-y-2.5 mb-6">
+          <div class="bg-white rounded-2xl p-3.5 border border-ink-200/70 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-rose-50 grid place-items-center shrink-0"><i data-lucide="phone" class="w-5 h-5 text-rose-500"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-ink-900 text-sm">Ligar pra Juliana Prado</p>
+              <p class="text-ink-400 text-xs">Follow-up · interessada no Apto Moema · atrasado</p>
+            </div>
+            <span class="text-[11px] font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-lg">9:00</span>
+          </div>
+          <div class="bg-white rounded-2xl p-3.5 border border-ink-200/70 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-brand-50 grid place-items-center shrink-0"><i data-lucide="map-pin" class="w-5 h-5 text-brand-600"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-ink-900 text-sm">Visita · Casa no Bom Pastor</p>
+              <p class="text-ink-400 text-xs">com Carlos e Ana Ferreira</p>
+            </div>
+            <span class="text-[11px] font-bold text-brand-700 bg-brand-50 px-2 py-1 rounded-lg">14:30</span>
+          </div>
+          <div class="bg-white rounded-2xl p-3.5 border border-ink-200/70 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-amber-50 grid place-items-center shrink-0"><i data-lucide="file-text" class="w-5 h-5 text-amber-500"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-ink-900 text-sm">Cobrar certidão — Negócio Apto Centro</p>
+              <p class="text-ink-400 text-xs">documento pendente há 3 dias</p>
+            </div>
+            <span class="text-[11px] font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded-lg">17:00</span>
+          </div>
+        </div>
+
+        <!-- Match automático destaque -->
+        <div class="bg-white rounded-2xl border border-brand-200 p-4 mb-4 relative overflow-hidden">
+          <div class="absolute -right-6 -top-6 w-24 h-24 bg-brand-50 rounded-full"></div>
+          <div class="relative">
+            <span class="inline-flex items-center gap-1 text-[11px] font-bold text-brand-700 bg-brand-50 px-2 py-1 rounded-lg"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> MATCH AUTOMÁTICO</span>
+            <p class="font-bold text-ink-900 mt-2">Novo imóvel bateu com 3 clientes</p>
+            <p class="text-ink-500 text-sm mt-0.5">Apto 3 dorms · Bom Pastor · R$ 390.000 combina com a busca de <b>Juliana</b>, <b>Marcos</b> e <b>Patrícia</b>.</p>
+            <button onclick="go('imoveis')" class="mt-3 w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl py-2.5 text-sm flex items-center justify-center gap-1.5">
+              <i data-lucide="send" class="w-4 h-4"></i> Enviar no WhatsApp
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================= FUNIL ============================= -->
+      <section id="view-funil" class="view px-0 pt-3">
+        <div class="px-5 mb-3 flex items-center justify-between">
+          <div>
+            <h2 class="text-xl font-extrabold text-ink-900">Funil de leads</h2>
+            <p class="text-ink-400 text-xs">Arraste para mover de etapa · 24 ativos</p>
+          </div>
+          <button class="w-9 h-9 grid place-items-center rounded-xl bg-brand-600 text-white"><i data-lucide="plus" class="w-5 h-5"></i></button>
+        </div>
+
+        <!-- Origem dos leads -->
+        <div class="px-5 flex gap-2 overflow-x-auto pb-3 kanban-col">
+          <span class="shrink-0 text-xs font-semibold bg-white border border-ink-200 rounded-full px-3 py-1.5 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> WhatsApp <b class="text-ink-400">9</b></span>
+          <span class="shrink-0 text-xs font-semibold bg-white border border-ink-200 rounded-full px-3 py-1.5 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-500"></span> ZAP/Viva <b class="text-ink-400">7</b></span>
+          <span class="shrink-0 text-xs font-semibold bg-white border border-ink-200 rounded-full px-3 py-1.5 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-pink-500"></span> Instagram <b class="text-ink-400">5</b></span>
+          <span class="shrink-0 text-xs font-semibold bg-white border border-ink-200 rounded-full px-3 py-1.5 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Indicação <b class="text-ink-400">3</b></span>
+        </div>
+
+        <!-- Kanban -->
+        <div class="flex gap-3 overflow-x-auto px-5 pb-4 snap-x kanban-col" id="kanban"></div>
+      </section>
+
+      <!-- ============================= CLIENTES ============================= -->
+      <section id="view-clientes" class="view px-5 pt-4">
+        <h2 class="text-xl font-extrabold text-ink-900 mb-1">Clientes</h2>
+        <p class="text-ink-400 text-xs mb-3">68 ativos · cada um com perfil de busca</p>
+        <div class="relative mb-4">
+          <i data-lucide="search" class="w-4 h-4 text-ink-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+          <input placeholder="Buscar por nome, bairro, faixa…" class="w-full bg-white border border-ink-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-200" />
+        </div>
+        <div id="clientes" class="space-y-3"></div>
+      </section>
+
+      <!-- ============================= IMÓVEIS ============================= -->
+      <section id="view-imoveis" class="view px-5 pt-4">
+        <div class="flex items-center justify-between mb-1">
+          <h2 class="text-xl font-extrabold text-ink-900">Imóveis</h2>
+          <button class="text-sm font-semibold text-brand-600 flex items-center gap-1"><i data-lucide="plus" class="w-4 h-4"></i> Cadastrar</button>
+        </div>
+        <p class="text-ink-400 text-xs mb-3">Cadastre uma vez · publique no ZAP, Viva e Insta</p>
+        <div id="imoveis" class="space-y-4"></div>
+      </section>
+
+      <!-- ============================= AGENDA ============================= -->
+      <section id="view-agenda" class="view px-5 pt-4">
+        <h2 class="text-xl font-extrabold text-ink-900 mb-1">Agenda & follow-ups</h2>
+        <p class="text-ink-400 text-xs mb-4">Sincronizada com o Google Agenda</p>
+        <div id="agenda" class="space-y-5"></div>
+      </section>
+
+      <!-- ============================= WHATSAPP ============================= -->
+      <section id="view-whatsapp" class="view pt-4">
+        <!-- Lista de conversas -->
+        <div id="wppList">
+          <div class="px-5 mb-3">
+            <h2 class="text-xl font-extrabold text-ink-900">WhatsApp</h2>
+            <p class="text-ink-400 text-xs flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Conectado · número comercial</p>
+          </div>
+          <div class="px-5 mb-3">
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 text-ink-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+              <input placeholder="Buscar conversa…" class="w-full bg-white border border-ink-200 rounded-xl pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-200" />
+            </div>
+          </div>
+          <div id="conversas"></div>
+        </div>
+
+        <!-- Chat aberto -->
+        <div id="wppChat" class="hidden flex-col" style="height:calc(100vh - 0px)"></div>
+      </section>
+
+      <!-- ============================= NEGÓCIOS ============================= -->
+      <section id="view-negocios" class="view px-5 pt-4">
+        <h2 class="text-xl font-extrabold text-ink-900 mb-1">Negócios em andamento</h2>
+        <p class="text-ink-400 text-xs mb-4">Da proposta à escritura · com prazos</p>
+        <div id="negocios" class="space-y-4"></div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="absolute bottom-0 inset-x-0 bg-white/90 backdrop-blur border-t border-ink-200 px-1 pt-2 pb-3 z-30">
+      <div class="flex items-center justify-around">
+        <button onclick="go('inicio')"  data-nav="inicio"  class="nav-item active flex flex-col items-center gap-1 flex-1">
+          <span class="nav-ico w-9 h-7 grid place-items-center rounded-full"><i data-lucide="home" class="w-5 h-5"></i></span>
+          <span class="text-[9px] font-semibold">Início</span>
+        </button>
+        <button onclick="go('funil')"   data-nav="funil"   class="nav-item flex flex-col items-center gap-1 flex-1 text-ink-400">
+          <span class="nav-ico w-9 h-7 grid place-items-center rounded-full"><i data-lucide="kanban" class="w-5 h-5"></i></span>
+          <span class="text-[9px] font-semibold">Funil</span>
+        </button>
+        <button onclick="go('imoveis')" data-nav="imoveis" class="nav-item flex flex-col items-center gap-1 flex-1 text-ink-400">
+          <span class="nav-ico w-9 h-7 grid place-items-center rounded-full"><i data-lucide="building-2" class="w-5 h-5"></i></span>
+          <span class="text-[9px] font-semibold">Imóveis</span>
+        </button>
+        <button onclick="go('whatsapp')" data-nav="whatsapp" class="nav-item flex flex-col items-center gap-1 flex-1 text-ink-400">
+          <span class="nav-ico relative w-9 h-7 grid place-items-center rounded-full"><i data-lucide="message-circle" class="w-5 h-5"></i><span class="absolute top-0 right-1.5 w-4 h-4 bg-emerald-500 text-white text-[8px] font-bold rounded-full grid place-items-center">4</span></span>
+          <span class="text-[9px] font-semibold">WhatsApp</span>
+        </button>
+        <button onclick="go('clientes')" data-nav="clientes" class="nav-item flex flex-col items-center gap-1 flex-1 text-ink-400">
+          <span class="nav-ico w-9 h-7 grid place-items-center rounded-full"><i data-lucide="users" class="w-5 h-5"></i></span>
+          <span class="text-[9px] font-semibold">Clientes</span>
+        </button>
+        <button onclick="go('negocios')" data-nav="negocios" class="nav-item flex flex-col items-center gap-1 flex-1 text-ink-400">
+          <span class="nav-ico w-9 h-7 grid place-items-center rounded-full"><i data-lucide="handshake" class="w-5 h-5"></i></span>
+          <span class="text-[9px] font-semibold">Negócios</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+</div>
+
+<!-- ====== Slide-over detalhe imóvel ====== -->
+<div id="overlay" class="fixed inset-0 bg-ink-900/40 z-40 hidden" onclick="closeSheet()"></div>
+<div id="sheet" class="fixed z-50 bottom-0 inset-x-0 sm:inset-x-auto sm:right-[calc(50%-210px)] sm:bottom-6 sm:w-[420px] bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl slide translate-y-full max-h-[85vh] overflow-y-auto">
+  <div id="sheetBody"></div>
+</div>
+
+<!-- toast -->
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-28 z-[60] bg-ink-900 text-white text-sm font-medium px-4 py-2.5 rounded-xl shadow-xl opacity-0 transition-opacity pointer-events-none flex items-center gap-2">
+  <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-400"></i><span id="toastMsg"></span>
+</div>
+
+<script>
+/* ===================== DADOS FICTÍCIOS ===================== */
+const leads = {
+  novo: [
+    {n:'Juliana Prado', src:'WhatsApp', col:'emerald', want:'Apto 3d · Bom Pastor · até 400k', t:'14 min', hot:true},
+    {n:'Marcos Vianna', src:'ZAP', col:'blue', want:'Apto 3d · Centro · até 420k', t:'38 min', hot:true},
+    {n:'Patrícia Lemos', src:'Instagram', col:'pink', want:'2d com varanda · San Raphael', t:'1h', hot:false},
+  ],
+  contatado: [
+    {n:'Bruno Tavares', src:'Indicação', col:'amber', want:'Casa · Eldorado · até 650k', t:'ontem'},
+    {n:'Sandra Reis', src:'ZAP', col:'blue', want:'Kitnet investimento · Centro', t:'2 dias'},
+  ],
+  visita: [
+    {n:'Carlos & Ana', src:'WhatsApp', col:'emerald', want:'Casa · Bom Pastor', t:'visita hoje 14:30'},
+    {n:'Roberto Dias', src:'Instagram', col:'pink', want:'Apto 2d · Industrial', t:'visita amanhã'},
+  ],
+  proposta: [
+    {n:'Família Nunes', src:'Indicação', col:'amber', want:'Apto Centro · R$ 360k', t:'aguard. banco'},
+  ],
+  fechado: [
+    {n:'Eduardo Salles', src:'WhatsApp', col:'emerald', want:'Casa Bela Vista · R$ 540k', t:'comissão R$ 16k'},
+  ]
+};
+const etapas = [
+  {key:'novo', label:'Novo', dot:'bg-rose-500'},
+  {key:'contatado', label:'Contatado', dot:'bg-blue-500'},
+  {key:'visita', label:'Visita', dot:'bg-violet-500'},
+  {key:'proposta', label:'Proposta', dot:'bg-amber-500'},
+  {key:'fechado', label:'Fechado', dot:'bg-brand-500'},
+];
+const srcDot = {emerald:'bg-emerald-500',blue:'bg-blue-500',pink:'bg-pink-500',amber:'bg-amber-500'};
+
+const clientes = [
+  {n:'Juliana Prado', ini:'JP', cor:'from-rose-400 to-pink-500', perfil:['Apto','3 dorms','Bom Pastor','até R$400k'], status:'Quente', sc:'rose', last:'Pediu pra avisar quando baixar preço'},
+  {n:'Marcos Vianna', ini:'MV', cor:'from-blue-400 to-indigo-500', perfil:['Apto','3 dorms','Centro','até R$420k'], status:'Quente', sc:'rose', last:'Visitou 2 imóveis essa semana'},
+  {n:'Patrícia Lemos', ini:'PL', cor:'from-violet-400 to-purple-500', perfil:['Apto','2 dorms','varanda','San Raphael'], status:'Morno', sc:'amber', last:'Aguardando opções'},
+  {n:'Bruno Tavares', ini:'BT', cor:'from-amber-400 to-orange-500', perfil:['Casa','Eldorado','até R$650k'], status:'Morno', sc:'amber', last:'Indicação do Eduardo'},
+  {n:'Família Nunes', ini:'FN', cor:'from-emerald-400 to-teal-500', perfil:['Apto','Centro','R$360k'], status:'Em proposta', sc:'emerald', last:'Proposta aceita, no banco'},
+];
+
+const imoveis = [
+  {
+    t:'Apto 3 dormitórios', bairro:'Bom Pastor, Ubá-MG', preco:'R$ 390.000',
+    m2:'94 m²', d:'3', vagas:'2', cor:'from-emerald-200 to-teal-100', ico:'building-2',
+    tags:['ZAP','VivaReal','Instagram'], match:3, code:'#BP-204'
+  },
+  {
+    t:'Casa térrea c/ quintal', bairro:'Eldorado, Ubá-MG', preco:'R$ 620.000',
+    m2:'180 m²', d:'3', vagas:'3', cor:'from-amber-200 to-orange-100', ico:'home',
+    tags:['ZAP'], match:1, code:'#EL-077'
+  },
+  {
+    t:'Apto 2 dorms c/ varanda', bairro:'San Raphael, Ubá-MG', preco:'R$ 295.000',
+    m2:'68 m²', d:'2', vagas:'1', cor:'from-violet-200 to-purple-100', ico:'building-2',
+    tags:['ZAP','VivaReal'], match:2, code:'#SR-991'
+  },
+];
+const matchClientes = {
+  0:[{n:'Juliana Prado', pct:96},{n:'Marcos Vianna', pct:88},{n:'Patrícia Lemos', pct:74}],
+  1:[{n:'Bruno Tavares', pct:71}],
+  2:[{n:'Patrícia Lemos', pct:93},{n:'Sandra Reis', pct:69}],
+};
+
+const agenda = [
+  {dia:'Hoje · 24 jun', itens:[
+    {h:'09:00', t:'Ligar pra Juliana Prado', s:'Follow-up · atrasado', c:'rose', i:'phone'},
+    {h:'14:30', t:'Visita · Casa no Bom Pastor', s:'Carlos & Ana', c:'brand', i:'map-pin'},
+    {h:'17:00', t:'Cobrar certidão · Negócio Centro', s:'documento pendente', c:'amber', i:'file-text'},
+  ]},
+  {dia:'Amanhã · 25 jun', itens:[
+    {h:'10:00', t:'Visita · Apto 2d Industrial', s:'Roberto Dias', c:'brand', i:'map-pin'},
+    {h:'15:00', t:'Retorno proposta · Família Nunes', s:'resposta do banco', c:'violet', i:'phone'},
+  ]},
+  {dia:'Sex · 27 jun', itens:[
+    {h:'11:00', t:'Reativar lead frio · Sandra Reis', s:'sem contato há 5 dias', c:'amber', i:'rotate-ccw'},
+  ]},
+];
+const agCor = {rose:['bg-rose-50','text-rose-500'],brand:['bg-brand-50','text-brand-600'],amber:['bg-amber-50','text-amber-500'],violet:['bg-violet-50','text-violet-500']};
+
+const negocios = [
+  {
+    t:'Apto Centro · Família Nunes', valor:'R$ 360.000', com:'R$ 10.800',
+    etapa:'Financiamento', pct:60,
+    docs:[{l:'Proposta assinada',ok:true},{l:'Matrícula atualizada',ok:true},{l:'Certidões do vendedor',ok:false,alerta:'3 dias'},{l:'Aprovação do banco',ok:false},{l:'Escritura',ok:false}]
+  },
+  {
+    t:'Casa Bela Vista · Eduardo Salles', valor:'R$ 540.000', com:'R$ 16.200',
+    etapa:'Escritura', pct:90,
+    docs:[{l:'Proposta assinada',ok:true},{l:'Matrícula atualizada',ok:true},{l:'Certidões',ok:true},{l:'Financiamento aprovado',ok:true},{l:'Agendar cartório',ok:false}]
+  },
+];
+
+const conversas = [
+  {
+    n:'Juliana Prado', ini:'JP', cor:'from-rose-400 to-pink-500', time:'14:32', unread:2, online:true,
+    last:'Pode ser amanhã às 10h então 😊',
+    msgs:[
+      {me:false, t:'Oi Wallacy! Vi o apartamento de 3 quartos no Bom Pastor, ainda está disponível?', h:'14:18'},
+      {me:true, t:'Oi Juliana! Está sim 🙌 É de 94m², 2 vagas, R$ 390 mil. Quer que eu te mande as fotos?', h:'14:20'},
+      {me:true, type:'card', h:'14:20'},
+      {me:false, t:'Adorei! É bem o que eu procuro. Dá pra visitar?', h:'14:29'},
+      {me:true, t:'Claro! Posso te levar lá amanhã de manhã. 10h fica bom?', h:'14:31'},
+      {me:false, t:'Pode ser amanhã às 10h então 😊', h:'14:32'},
+    ]
+  },
+  {
+    n:'Marcos Vianna', ini:'MV', cor:'from-blue-400 to-indigo-500', time:'12:05', unread:1, online:false,
+    last:'Beleza, fico no aguardo das opções',
+    msgs:[
+      {me:false, t:'Wallacy, procuro apto 3 quartos no Centro, até 420 mil. Tem algo?', h:'11:50'},
+      {me:true, t:'Tenho duas opções boas Marcos! Te mando ainda hoje, fechado?', h:'11:58'},
+      {me:false, t:'Beleza, fico no aguardo das opções', h:'12:05'},
+    ]
+  },
+  {
+    n:'Carlos & Ana', ini:'CA', cor:'from-emerald-400 to-teal-500', time:'Ontem', unread:0, online:false,
+    last:'Confirmado pra hoje 14:30 👍',
+    msgs:[
+      {me:true, t:'Pessoal, confirmando a visita na casa do Bom Pastor hoje 14:30. Endereço: Rua das Acácias, 120.', h:'09:10'},
+      {me:false, t:'Confirmado pra hoje 14:30 👍', h:'09:42'},
+    ]
+  },
+  {
+    n:'Sandra Reis', ini:'SR', cor:'from-amber-400 to-orange-500', time:'2 dias', unread:0, online:false,
+    last:'Você: Te aviso assim que surgir uma kitnet 👍',
+    msgs:[
+      {me:false, t:'Oi! Procuro uma kitnet pra investir, perto do centro.', h:'10:00'},
+      {me:true, t:'Te aviso assim que surgir uma kitnet 👍', h:'10:12'},
+    ]
+  },
+];
+
+/* ===================== RENDER ===================== */
+function chip(txt, extra=''){ return `<span class="text-[11px] font-medium bg-ink-100 text-ink-600 px-2 py-0.5 rounded-md ${extra}">${txt}</span>` }
+
+function renderKanban(){
+  const el = document.getElementById('kanban');
+  el.innerHTML = etapas.map(e=>{
+    const cards = (leads[e.key]||[]).map(l=>`
+      <div class="bg-white rounded-xl p-3 border border-ink-200/70 shadow-sm active:scale-[.98] transition cursor-grab">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="flex items-center gap-1.5 text-[10px] font-semibold text-ink-400"><span class="w-1.5 h-1.5 rounded-full ${srcDot[l.col]}"></span>${l.src}</span>
+          ${l.hot?'<span class="text-[10px]">🔥</span>':''}
+        </div>
+        <p class="font-bold text-ink-900 text-sm leading-tight">${l.n}</p>
+        <p class="text-ink-500 text-xs mt-1 leading-snug">${l.want}</p>
+        <div class="flex items-center justify-between mt-2.5 pt-2 border-t border-ink-100">
+          <span class="text-[11px] text-ink-400">${l.t}</span>
+          <div class="flex gap-1">
+            <span class="w-6 h-6 grid place-items-center rounded-lg bg-brand-50"><i data-lucide="message-circle" class="w-3.5 h-3.5 text-brand-600"></i></span>
+            <span class="w-6 h-6 grid place-items-center rounded-lg bg-ink-100"><i data-lucide="phone" class="w-3.5 h-3.5 text-ink-500"></i></span>
+          </div>
+        </div>
+      </div>`).join('');
+    return `
+      <div class="shrink-0 w-[78vw] sm:w-[260px] snap-start">
+        <div class="flex items-center justify-between mb-2 px-1">
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full ${e.dot}"></span><h4 class="font-bold text-ink-800 text-sm">${e.label}</h4></div>
+          <span class="text-xs font-semibold text-ink-400 bg-ink-100 px-2 py-0.5 rounded-full">${(leads[e.key]||[]).length}</span>
+        </div>
+        <div class="space-y-2.5 kanban-col">${cards||'<p class="text-ink-300 text-xs px-1">—</p>'}</div>
+      </div>`;
+  }).join('');
+  refreshIcons();
+}
+
+function renderClientes(){
+  document.getElementById('clientes').innerHTML = clientes.map(c=>{
+    const sc = {rose:'bg-rose-50 text-rose-600',amber:'bg-amber-50 text-amber-600',emerald:'bg-brand-50 text-brand-700'}[c.sc];
+    return `
+    <div class="bg-white rounded-2xl p-4 border border-ink-200/70">
+      <div class="flex items-start gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-br ${c.cor} grid place-items-center text-white font-bold shrink-0">${c.ini}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between">
+            <p class="font-bold text-ink-900">${c.n}</p>
+            <span class="text-[11px] font-bold ${sc} px-2 py-0.5 rounded-full">${c.status}</span>
+          </div>
+          <div class="flex flex-wrap gap-1.5 mt-2">${c.perfil.map(p=>chip(p)).join('')}</div>
+          <p class="text-ink-400 text-xs mt-2 flex items-center gap-1"><i data-lucide="history" class="w-3.5 h-3.5"></i> ${c.last}</p>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  refreshIcons();
+}
+
+function renderImoveis(){
+  document.getElementById('imoveis').innerHTML = imoveis.map((im,idx)=>`
+    <div class="bg-white rounded-2xl border border-ink-200/70 overflow-hidden">
+      <div class="h-32 bg-gradient-to-br ${im.cor} relative grid place-items-center">
+        <i data-lucide="${im.ico}" class="w-12 h-12 text-white/70"></i>
+        <span class="absolute top-3 left-3 text-[11px] font-bold bg-white/80 backdrop-blur px-2 py-1 rounded-lg text-ink-700">${im.code}</span>
+        ${im.match?`<span class="absolute top-3 right-3 text-[11px] font-bold bg-brand-600 text-white px-2 py-1 rounded-lg flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> ${im.match} match</span>`:''}
+      </div>
+      <div class="p-4">
+        <div class="flex items-start justify-between">
+          <div>
+            <p class="font-bold text-ink-900">${im.t}</p>
+            <p class="text-ink-400 text-xs flex items-center gap-1 mt-0.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> ${im.bairro}</p>
+          </div>
+          <p class="font-extrabold text-brand-600">${im.preco}</p>
+        </div>
+        <div class="flex gap-4 mt-3 text-xs text-ink-500">
+          <span class="flex items-center gap-1"><i data-lucide="maximize" class="w-4 h-4"></i> ${im.m2}</span>
+          <span class="flex items-center gap-1"><i data-lucide="bed" class="w-4 h-4"></i> ${im.d} dorms</span>
+          <span class="flex items-center gap-1"><i data-lucide="car" class="w-4 h-4"></i> ${im.vagas} vagas</span>
+        </div>
+        <div class="flex items-center gap-1.5 mt-3">
+          <span class="text-[11px] text-ink-400 mr-1">Publicado:</span>
+          ${im.tags.map(t=>chip(t,'!bg-blue-50 !text-blue-600')).join('')}
+        </div>
+        <button onclick="openImovel(${idx})" class="mt-3 w-full border border-brand-200 text-brand-700 hover:bg-brand-50 font-semibold rounded-xl py-2.5 text-sm flex items-center justify-center gap-1.5">
+          <i data-lucide="sparkles" class="w-4 h-4"></i> Ver clientes compatíveis
+        </button>
+      </div>
+    </div>`).join('');
+  refreshIcons();
+}
+
+function renderAgenda(){
+  document.getElementById('agenda').innerHTML = agenda.map(d=>`
+    <div>
+      <p class="text-xs font-bold text-ink-400 uppercase tracking-wide mb-2">${d.dia}</p>
+      <div class="space-y-2.5">
+        ${d.itens.map(it=>{const [bg,tx]=agCor[it.c];return `
+          <div class="bg-white rounded-2xl p-3.5 border border-ink-200/70 flex items-center gap-3">
+            <div class="text-center shrink-0 w-12">
+              <p class="text-sm font-extrabold text-ink-900">${it.h}</p>
+            </div>
+            <div class="w-9 h-9 rounded-xl ${bg} grid place-items-center shrink-0"><i data-lucide="${it.i}" class="w-4.5 h-4.5 ${tx}"></i></div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-ink-900 text-sm leading-tight">${it.t}</p>
+              <p class="text-ink-400 text-xs mt-0.5">${it.s}</p>
+            </div>
+          </div>`}).join('')}
+      </div>
+    </div>`).join('');
+  refreshIcons();
+}
+
+function renderNegocios(){
+  document.getElementById('negocios').innerHTML = negocios.map(n=>`
+    <div class="bg-white rounded-2xl border border-ink-200/70 p-4">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="font-bold text-ink-900 text-sm">${n.t}</p>
+          <p class="text-ink-400 text-xs mt-0.5">Venda ${n.valor} · comissão <b class="text-brand-600">${n.com}</b></p>
+        </div>
+        <span class="text-[11px] font-bold text-brand-700 bg-brand-50 px-2 py-1 rounded-lg shrink-0">${n.etapa}</span>
+      </div>
+      <div class="mt-3">
+        <div class="h-2 bg-ink-100 rounded-full overflow-hidden">
+          <div class="h-full bg-brand-500 rounded-full" style="width:${n.pct}%"></div>
+        </div>
+        <p class="text-[11px] text-ink-400 mt-1">${n.pct}% concluído</p>
+      </div>
+      <div class="mt-3 space-y-2 pt-3 border-t border-ink-100">
+        ${n.docs.map(d=>`
+          <div class="flex items-center gap-2.5">
+            <span class="w-5 h-5 rounded-full grid place-items-center shrink-0 ${d.ok?'bg-brand-100':'bg-ink-100'}">
+              <i data-lucide="${d.ok?'check':'circle'}" class="w-3 h-3 ${d.ok?'text-brand-600':'text-ink-300'}"></i>
+            </span>
+            <span class="text-sm ${d.ok?'text-ink-400 line-through':'text-ink-700 font-medium'}">${d.l}</span>
+            ${d.alerta?`<span class="ml-auto text-[10px] font-bold text-rose-500 bg-rose-50 px-2 py-0.5 rounded-md">⚠ ${d.alerta}</span>`:''}
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+  refreshIcons();
+}
+
+/* ===================== WHATSAPP ===================== */
+function renderConversas(){
+  document.getElementById('conversas').innerHTML = conversas.map((c,i)=>`
+    <button onclick="openChat(${i})" class="w-full text-left px-5 py-3 flex items-center gap-3 hover:bg-white active:bg-ink-100 border-b border-ink-100">
+      <div class="relative shrink-0">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br ${c.cor} grid place-items-center text-white font-bold">${c.ini}</div>
+        ${c.online?'<span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>':''}
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center justify-between">
+          <p class="font-bold text-ink-900 text-sm truncate">${c.n}</p>
+          <span class="text-[11px] ${c.unread?'text-emerald-600 font-bold':'text-ink-400'} shrink-0 ml-2">${c.time}</span>
+        </div>
+        <div class="flex items-center justify-between mt-0.5">
+          <p class="text-ink-500 text-xs truncate pr-2">${c.last}</p>
+          ${c.unread?`<span class="shrink-0 w-5 h-5 bg-emerald-500 text-white text-[10px] font-bold rounded-full grid place-items-center">${c.unread}</span>`:''}
+        </div>
+      </div>
+    </button>`).join('');
+  refreshIcons();
+}
+
+function openChat(i){
+  const c = conversas[i];
+  const bubbles = c.msgs.map(m=>{
+    if(m.type==='card'){
+      return `
+      <div class="flex justify-end">
+        <div class="max-w-[80%] bg-brand-600 rounded-2xl rounded-br-md overflow-hidden shadow-sm">
+          <div class="h-24 bg-gradient-to-br from-emerald-200 to-teal-100 grid place-items-center"><i data-lucide="building-2" class="w-9 h-9 text-white/70"></i></div>
+          <div class="p-2.5 text-white">
+            <p class="font-bold text-sm leading-tight">Apto 3 dorms · Bom Pastor</p>
+            <p class="text-brand-100 text-xs mt-0.5">94m² · 2 vagas · R$ 390.000</p>
+            <p class="text-brand-200 text-[10px] mt-1">#BP-204 · enviado do seu catálogo</p>
+          </div>
+        </div>
+      </div>`;
+    }
+    return m.me
+      ? `<div class="flex justify-end"><div class="max-w-[80%] bg-brand-600 text-white rounded-2xl rounded-br-md px-3.5 py-2 text-sm shadow-sm">${m.t}<span class="block text-[10px] text-brand-200 text-right mt-1">${m.h} ✓✓</span></div></div>`
+      : `<div class="flex justify-start"><div class="max-w-[80%] bg-white text-ink-800 rounded-2xl rounded-bl-md px-3.5 py-2 text-sm shadow-sm border border-ink-100">${m.t}<span class="block text-[10px] text-ink-400 text-right mt-1">${m.h}</span></div></div>`;
+  }).join('');
+
+  document.getElementById('wppChat').innerHTML = `
+    <div class="sticky top-0 bg-white border-b border-ink-200 px-3 py-2.5 flex items-center gap-2.5 z-10">
+      <button onclick="closeChat()" class="w-8 h-8 grid place-items-center rounded-full hover:bg-ink-100"><i data-lucide="arrow-left" class="w-5 h-5 text-ink-600"></i></button>
+      <div class="w-9 h-9 rounded-full bg-gradient-to-br ${c.cor} grid place-items-center text-white font-bold text-sm">${c.ini}</div>
+      <div class="flex-1">
+        <p class="font-bold text-ink-900 text-sm leading-none">${c.n}</p>
+        <p class="text-[11px] ${c.online?'text-emerald-600':'text-ink-400'} mt-0.5">${c.online?'online':'visto por último hoje'}</p>
+      </div>
+      <button class="w-8 h-8 grid place-items-center rounded-full hover:bg-ink-100"><i data-lucide="phone" class="w-4.5 h-4.5 text-ink-500"></i></button>
+      <button onclick="go('clientes')" class="w-8 h-8 grid place-items-center rounded-full hover:bg-ink-100"><i data-lucide="user-round" class="w-4.5 h-4.5 text-ink-500"></i></button>
+    </div>
+
+    <div class="px-3 py-3 space-y-2 overflow-y-auto" style="background:#eae6df; min-height:380px;">
+      <p class="text-center"><span class="text-[10px] bg-white/70 text-ink-500 px-2 py-0.5 rounded-md">Hoje</span></p>
+      ${bubbles}
+    </div>
+
+    <div class="px-3 py-2.5 bg-white border-t border-ink-200">
+      <div class="flex items-center gap-1.5 mb-2 overflow-x-auto kanban-col">
+        <button onclick="openImovel(0)" class="shrink-0 text-[11px] font-semibold text-brand-700 bg-brand-50 border border-brand-200 rounded-full px-3 py-1.5 flex items-center gap-1"><i data-lucide="building-2" class="w-3.5 h-3.5"></i> Enviar imóvel</button>
+        <button onclick="toast('Visita agendada na sua agenda')" class="shrink-0 text-[11px] font-semibold text-ink-600 bg-ink-100 rounded-full px-3 py-1.5 flex items-center gap-1"><i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i> Agendar visita</button>
+        <button onclick="toast('Lembrete de follow-up criado')" class="shrink-0 text-[11px] font-semibold text-ink-600 bg-ink-100 rounded-full px-3 py-1.5 flex items-center gap-1"><i data-lucide="bell-plus" class="w-3.5 h-3.5"></i> Follow-up</button>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="flex-1 bg-ink-100 rounded-full px-4 py-2.5 text-sm text-ink-400">Mensagem…</div>
+        <button onclick="toast('Mensagem enviada')" class="w-10 h-10 rounded-full bg-brand-600 grid place-items-center text-white shrink-0"><i data-lucide="send" class="w-4.5 h-4.5"></i></button>
+      </div>
+    </div>`;
+  document.getElementById('wppList').classList.add('hidden');
+  const chat = document.getElementById('wppChat');
+  chat.classList.remove('hidden'); chat.classList.add('flex');
+  refreshIcons();
+}
+function closeChat(){
+  document.getElementById('wppChat').classList.add('hidden');
+  document.getElementById('wppChat').classList.remove('flex');
+  document.getElementById('wppList').classList.remove('hidden');
+}
+
+/* ===================== SHEET (match) ===================== */
+function openImovel(idx){
+  const im = imoveis[idx];
+  const ms = matchClientes[idx]||[];
+  document.getElementById('sheetBody').innerHTML = `
+    <div class="p-5">
+      <div class="w-10 h-1 bg-ink-200 rounded-full mx-auto mb-4"></div>
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-br ${im.cor} grid place-items-center"><i data-lucide="${im.ico}" class="w-6 h-6 text-white/80"></i></div>
+        <div>
+          <p class="font-bold text-ink-900">${im.t}</p>
+          <p class="text-ink-400 text-xs">${im.bairro} · ${im.preco}</p>
+        </div>
+      </div>
+      <p class="text-xs font-bold text-ink-400 uppercase tracking-wide mb-2 flex items-center gap-1.5"><i data-lucide="sparkles" class="w-4 h-4 text-brand-500"></i> Clientes compatíveis</p>
+      <div class="space-y-2.5">
+        ${ms.map(m=>`
+          <div class="flex items-center gap-3 bg-ink-50 rounded-xl p-3">
+            <div class="w-9 h-9 rounded-lg bg-brand-100 grid place-items-center text-brand-700 font-bold text-sm">${m.n.split(' ').map(x=>x[0]).slice(0,2).join('')}</div>
+            <div class="flex-1">
+              <p class="font-semibold text-ink-900 text-sm">${m.n}</p>
+              <div class="h-1.5 bg-ink-200 rounded-full mt-1 w-32"><div class="h-full bg-brand-500 rounded-full" style="width:${m.pct}%"></div></div>
+            </div>
+            <span class="text-sm font-extrabold text-brand-600">${m.pct}%</span>
+          </div>`).join('')}
+      </div>
+      <button onclick="toast('Imóvel enviado para ${ms.length} cliente(s) no WhatsApp')" class="mt-5 w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold rounded-xl py-3 text-sm flex items-center justify-center gap-2">
+        <i data-lucide="send" class="w-4 h-4"></i> Enviar para todos no WhatsApp
+      </button>
+      <button onclick="closeSheet()" class="mt-2 w-full text-ink-400 font-medium rounded-xl py-2.5 text-sm">Fechar</button>
+    </div>`;
+  refreshIcons();
+  document.getElementById('overlay').classList.remove('hidden');
+  const s = document.getElementById('sheet');
+  requestAnimationFrame(()=> s.classList.remove('translate-y-full'));
+}
+function closeSheet(){
+  document.getElementById('sheet').classList.add('translate-y-full');
+  document.getElementById('overlay').classList.add('hidden');
+}
+
+/* ===================== NAV ===================== */
+const titles = {
+  inicio:['Wallacy Corretor','Bom dia, Wallacy 👋 · Ubá-MG'],
+  funil:['Funil','Pipeline de vendas'],
+  imoveis:['Imóveis','Sua carteira'],
+  whatsapp:['WhatsApp','Conversas'],
+  clientes:['Clientes','Carteira de contatos'],
+  negocios:['Negócios','Em andamento'],
+  agenda:['Agenda','Compromissos'],
+};
+function go(view){
+  if(typeof closeChat==='function') closeChat();
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    n.classList.toggle('active', n.dataset.nav===view);
+    n.classList.toggle('text-ink-400', n.dataset.nav!==view);
+  });
+  const [t,s] = titles[view]||titles.inicio;
+  document.getElementById('topTitle').textContent = t;
+  document.getElementById('topSub').textContent = s;
+  document.getElementById('scroll').scrollTop = 0;
+  refreshIcons();
+}
+
+let toastTimer;
+function toast(msg){
+  closeSheet();
+  document.getElementById('toastMsg').textContent = msg;
+  const el = document.getElementById('toast');
+  el.style.opacity = 1;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=> el.style.opacity = 0, 2600);
+}
+
+function refreshIcons(){ if(window.lucide) lucide.createIcons(); }
+
+/* init */
+renderKanban(); renderClientes(); renderImoveis(); renderAgenda(); renderNegocios(); renderConversas();
+refreshIcons();
+</script>
+</body>
+</html>
