@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<title>Proposta · Wallacy Corretor — Sistema de Gestão</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#059669; --green2:#047857; --dark:#0f172a; --ink:#1e293b;
+    --gray:#64748b; --light:#94a3b8; --line:#e2e8f0; --bg:#f8fafc;
+    --lgreen:#ecfdf5; --lgreen2:#d1fae5; --amber:#b45309; --lamber:#fef3c7;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  body{ font-family:'Inter',sans-serif; color:var(--ink); font-size:14px; line-height:1.55; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .page{ width:210mm; min-height:297mm; padding:18mm 16mm; margin:0 auto; background:#fff; position:relative; }
+  @media screen{ body{ background:#cbd5e1; padding:20px 0; } .page{ box-shadow:0 8px 30px rgba(0,0,0,.15); margin-bottom:24px; } }
+  @page{ size:A4; margin:0; }
+  @media print{ .page{ margin:0; box-shadow:none; page-break-after:always; } .page:last-child{ page-break-after:auto; } }
+
+  h1{ font-size:30px; font-weight:900; color:var(--dark); line-height:1.1; letter-spacing:-.5px; }
+  h2{ font-size:19px; font-weight:800; color:var(--dark); margin-bottom:10px; display:flex; align-items:center; gap:9px; }
+  h2 .num{ width:28px;height:28px;background:var(--lgreen);color:var(--green2);border-radius:8px;display:inline-grid;place-items:center;font-size:14px;flex:none; }
+  h3{ font-size:14px; font-weight:700; color:var(--dark); }
+  p{ color:var(--ink); }
+  .muted{ color:var(--gray); }
+  .small{ font-size:12px; }
+  .green{ color:var(--green2); }
+  .section{ margin-bottom:22px; }
+
+  .brandbar{ display:flex; align-items:center; gap:12px; }
+  .logo{ width:46px;height:46px;background:var(--green);border-radius:12px;display:grid;place-items:center;color:#fff;font-size:24px; }
+  .pill{ display:inline-block; background:var(--lgreen); color:var(--green2); font-weight:700; font-size:11px; padding:4px 10px; border-radius:20px; }
+
+  .card{ border:1px solid var(--line); border-radius:14px; padding:16px; }
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+
+  table{ width:100%; border-collapse:collapse; font-size:13px; }
+  th{ text-align:left; background:var(--dark); color:#fff; padding:9px 11px; font-weight:600; font-size:12px; }
+  th:first-child{ border-radius:8px 0 0 0; } th:last-child{ border-radius:0 8px 0 0; }
+  td{ padding:9px 11px; border-bottom:1px solid var(--line); }
+  tr:nth-child(even) td{ background:var(--bg); }
+
+  .kpi{ background:var(--lgreen); border:1px solid var(--lgreen2); border-radius:12px; padding:13px; }
+  .kpi .v{ font-size:22px; font-weight:900; color:var(--green2); }
+  .kpi .l{ font-size:11px; color:var(--gray); font-weight:600; }
+
+  .plan{ border:1px solid var(--line); border-radius:14px; padding:16px; }
+  .plan.hot{ border:2px solid var(--green); position:relative; }
+  .plan .price{ font-size:26px; font-weight:900; color:var(--dark); }
+  .plan .price span{ font-size:13px; color:var(--gray); font-weight:600; }
+  .feat{ font-size:12px; color:var(--ink); padding:3px 0 3px 18px; position:relative; }
+  .feat:before{ content:"✓"; position:absolute; left:0; color:var(--green); font-weight:800; }
+
+  .quote{ background:var(--dark); color:#fff; border-radius:14px; padding:18px 20px; font-size:15px; font-weight:600; line-height:1.5; }
+  .quote .q{ color:var(--green); font-size:30px; line-height:0; vertical-align:-8px; margin-right:4px; }
+
+  .step{ display:flex; gap:12px; margin-bottom:11px; }
+  .step .t{ width:30px;height:30px;flex:none;background:var(--lgreen);color:var(--green2);border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px; }
+  .foot{ position:absolute; bottom:10mm; left:16mm; right:16mm; display:flex; justify-content:space-between; font-size:10px; color:var(--light); border-top:1px solid var(--line); padding-top:8px; }
+</style>
+</head>
+<body>
+
+<!-- ===================== CAPA ===================== -->
+<div class="page">
+  <div class="brandbar">
+    <div class="logo">🔑</div>
+    <div>
+      <div style="font-weight:900;font-size:18px;color:var(--dark)">Wallacy Corretor</div>
+      <div class="muted small">Sistema de Gestão Imobiliária · Ubá-MG</div>
+    </div>
+  </div>
+
+  <div style="margin-top:90px">
+    <span class="pill">PROPOSTA COMERCIAL</span>
+    <h1 style="margin-top:16px;font-size:40px">Toda a sua corretagem<br>organizada num só lugar.</h1>
+    <p style="font-size:17px;color:var(--gray);margin-top:16px;max-width:150mm">
+      Um sistema feito para o corretor de rua: nenhum lead esfria, o imóvel certo chega ao cliente certo
+      na hora certa, e você fecha mais — com os mesmos clientes que já tem.
+    </p>
+  </div>
+
+  <div class="grid3" style="margin-top:50px">
+    <div class="kpi"><div class="v">0</div><div class="l">leads perdidos por esquecimento</div></div>
+    <div class="kpi"><div class="v">~1h</div><div class="l">economizada por dia</div></div>
+    <div class="kpi"><div class="v">10s</div><div class="l">pra mandar o imóvel certo</div></div>
+  </div>
+
+  <div class="card" style="margin-top:40px;background:var(--bg)">
+    <h3>Veja funcionando agora (protótipo no celular)</h3>
+    <p class="small muted" style="margin-top:4px">Aponte a câmera ou acesse o link — abre direto no seu celular, sem instalar nada:</p>
+    <p style="margin-top:8px;font-weight:700;color:var(--green2)">glaucoaraujop-sketch.github.io/wallacy-corretor</p>
+  </div>
+
+  <div class="foot">
+    <span>Proposta preparada para Wallacy Corretor</span>
+    <span>Ubá-MG · 2026</span>
+  </div>
+</div>
+
+<!-- ===================== O PROBLEMA + COMO FUNCIONA ===================== -->
+<div class="page">
+  <div class="section">
+    <h2><span class="num">1</span> O problema que você vive hoje</h2>
+    <p class="muted" style="margin-bottom:12px">Corretor não perde venda por falta de cliente. Perde por desorganização:</p>
+    <div class="grid2">
+      <div class="card"><h3>📲 Lead esfria</h3><p class="small muted">Cai no WhatsApp misturado com a vida pessoal e demora a ser respondido.</p></div>
+      <div class="card"><h3>🧠 Follow-up esquecido</h3><p class="small muted">60–80 clientes "na cabeça" — o cliente bom some no esquecimento.</p></div>
+      <div class="card"><h3>🔍 Match manual</h3><p class="small muted">Entra imóvel novo e você não lembra quem procurava exatamente aquilo.</p></div>
+      <div class="card"><h3>📄 Retrabalho e prazos</h3><p class="small muted">Cadastra o mesmo imóvel 4x; um documento atrasado quase derruba o negócio.</p></div>
+    </div>
+    <p style="margin-top:12px;font-weight:600">O custo é invisível, mas enorme: cada lead que esfria é uma comissão de <span class="green">R$ 10–20 mil</span> que foi pro concorrente.</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="num">2</span> Como funciona na prática — um dia de trabalho</h2>
+    <div class="step"><div class="t">07h</div><div><h3>Você abre o app</h3><p class="small muted">A tela já mostra "3 leads aguardando resposta" e suas tarefas do dia, priorizadas. Não precisa decidir o que fazer.</p></div></div>
+    <div class="step"><div class="t">08h</div><div><h3>Entra um lead novo</h3><p class="small muted">Vem do ZAP e cai direto no Funil, etiquetado com a origem. Você responde e arrasta para "Contatado". Nada se perde.</p></div></div>
+    <div class="step"><div class="t">10h</div><div><h3>Cadastra um imóvel — e o match acontece</h3><p class="small muted">Apto 3 quartos, Bom Pastor, R$ 390 mil. O sistema avisa: "combina com 3 clientes seus". Um clique → os três recebem no WhatsApp. 10 segundos.</p></div></div>
+    <div class="step"><div class="t">14h</div><div><h3>Visita</h3><p class="small muted">Já estava na agenda (sincronizada com o Google), com cliente e endereço. Depois, move o card para "Proposta".</p></div></div>
+    <div class="step"><div class="t">17h</div><div><h3>Alerta de documento</h3><p class="small muted">"Certidão pendente há 3 dias." Você cobra antes de virar problema. O negócio anda no checklist até a escritura.</p></div></div>
+  </div>
+
+  <div class="foot"><span>Wallacy Corretor — Proposta Comercial</span><span>2 / 5</span></div>
+</div>
+
+<!-- ===================== MÓDULOS + DIFERENCIAIS ===================== -->
+<div class="page">
+  <div class="section">
+    <h2><span class="num">3</span> O que o sistema entrega</h2>
+    <table>
+      <tr><th>Módulo</th><th>O que resolve na prática</th></tr>
+      <tr><td><b>Início (painel)</b></td><td>Bate o olho e sabe o que fazer hoje: leads esfriando, tarefas, comissão prevista.</td></tr>
+      <tr><td><b>Funil de leads</b></td><td>Todo lead de todo canal num lugar só, por etapa. <b>Zero lead perdido.</b></td></tr>
+      <tr><td><b>WhatsApp integrado</b></td><td>Conversa + histórico do cliente + envio de imóvel do catálogo, sem sair do app.</td></tr>
+      <tr><td><b>Imóveis</b></td><td>Cadastra uma vez, publica em todo lugar + <b>match automático</b> com os clientes.</td></tr>
+      <tr><td><b>Clientes</b></td><td>Cada cliente com o perfil do que procura — a base que faz o match funcionar.</td></tr>
+      <tr><td><b>Negócios</b></td><td>Checklist da proposta à escritura, com alerta de documento atrasado.</td></tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <h2><span class="num">4</span> Os 3 diferenciais</h2>
+    <div class="grid3">
+      <div class="card"><h3 class="green">Match automático</h3><p class="small muted" style="margin-top:6px">Imóvel ↔ cliente, sozinho. Ninguém faz isso de cabeça com 70 clientes.</p></div>
+      <div class="card"><h3 class="green">Lead nunca esfria</h3><p class="small muted" style="margin-top:6px">Funil + alertas garantem resposta rápida = mais fechamentos.</p></div>
+      <div class="card"><h3 class="green">Feito pra rua</h3><p class="small muted" style="margin-top:6px">Celular na mão, simples, em português, com a realidade de Ubá.</p></div>
+    </div>
+  </div>
+
+  <div class="quote section">
+    <span class="q">"</span>O sistema não trabalha por você. Ele faz você trabalhar nos clientes certos, na hora certa — e nunca deixa dinheiro na mesa.
+  </div>
+
+  <div class="foot"><span>Wallacy Corretor — Proposta Comercial</span><span>3 / 5</span></div>
+</div>
+
+<!-- ===================== PLANOS ===================== -->
+<div class="page">
+  <h2><span class="num">5</span> Planos</h2>
+  <div class="grid3" style="margin-top:6px">
+    <div class="plan">
+      <div class="muted small" style="font-weight:700">ESSENCIAL</div>
+      <div class="price" style="margin:6px 0">R$ 97<span>/mês</span></div>
+      <div class="feat">Funil de leads</div>
+      <div class="feat">Clientes e imóveis</div>
+      <div class="feat">Match automático</div>
+      <div class="feat">Agenda e follow-ups</div>
+    </div>
+    <div class="plan hot">
+      <span class="pill" style="position:absolute;top:-11px;left:16px">MAIS ESCOLHIDO</span>
+      <div class="muted small" style="font-weight:700;color:var(--green2)">PROFISSIONAL</div>
+      <div class="price" style="margin:6px 0">R$ 197<span>/mês</span></div>
+      <div class="feat">Tudo do Essencial</div>
+      <div class="feat"><b>WhatsApp integrado</b></div>
+      <div class="feat">Publicação nos portais</div>
+      <div class="feat">Relatórios e métricas</div>
+      <div class="feat">500 disparos/mês inclusos</div>
+    </div>
+    <div class="plan">
+      <div class="muted small" style="font-weight:700">IMOBILIÁRIA</div>
+      <div class="price" style="margin:6px 0">R$ 297<span>/mês</span></div>
+      <div class="feat">Tudo do Profissional</div>
+      <div class="feat">Equipe e divisão de carteira</div>
+      <div class="feat">+ R$ 49 / corretor extra</div>
+      <div class="feat">Gestão e relatórios do time</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:18px;background:var(--lgreen);border-color:var(--lgreen2)">
+    <h3 class="green">O retorno (ROI) que importa</h3>
+    <p style="margin-top:6px">A comissão numa venda de R$ 400 mil passa fácil de <b>R$ 10 mil</b>. O plano Profissional custa
+    R$ 2.364 no ano. <b>Se ele ajudar a fechar UMA venda a mais no ano, já se pagou 5 vezes.</b></p>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h3>O WhatsApp está incluído — sem dor de cabeça com custo</h3>
+    <p class="small muted" style="margin-top:6px">Responder cliente que te chamou (dentro de 24h) é gratuito. Os disparos automáticos que você inicia
+    já vêm com pacote mensal incluído no plano. Você não paga por mensagem — isso é por nossa conta.</p>
+  </div>
+
+  <div style="margin-top:14px" class="grid3">
+    <div class="kpi"><div class="v">1º mês</div><div class="l">grátis para testar com a carteira real</div></div>
+    <div class="kpi"><div class="v">Sem fidelidade</div><div class="l">cancela quando quiser</div></div>
+    <div class="kpi"><div class="v">Suporte</div><div class="l">direto com quem desenvolve</div></div>
+  </div>
+
+  <div class="foot"><span>Wallacy Corretor — Proposta Comercial</span><span>4 / 5</span></div>
+</div>
+
+<!-- ===================== PROXIMOS PASSOS ===================== -->
+<div class="page">
+  <h2><span class="num">6</span> Próximos passos</h2>
+  <div class="step"><div class="t">1</div><div><h3>Teste o protótipo no seu celular</h3><p class="small muted">Sinta o fluxo na prática pelo link. Sem instalar nada.</p></div></div>
+  <div class="step"><div class="t">2</div><div><h3>Conversa de 30 min</h3><p class="small muted">Ajustamos o sistema ao seu jeito de trabalhar e aos bairros que você atua.</p></div></div>
+  <div class="step"><div class="t">3</div><div><h3>Você usa de graça no piloto</h3><p class="small muted">Primeiros meses sem custo, em troca do seu feedback como primeiro corretor parceiro.</p></div></div>
+  <div class="step"><div class="t">4</div><div><h3>Vira rotina</h3><p class="small muted">Sua corretagem organizada, mais vendas fechadas, e você nunca mais perde um lead bom.</p></div></div>
+
+  <div class="quote" style="margin-top:22px">
+    <span class="q">"</span>Quanto vale pra você nunca mais perder um lead bom?
+  </div>
+
+  <div class="card" style="margin-top:30px;text-align:center;border:2px solid var(--green);background:var(--lgreen)">
+    <h3 class="green" style="font-size:16px">Vamos começar?</h3>
+    <p class="small muted" style="margin-top:6px">Fale comigo e agendamos sua demonstração.</p>
+    <p style="margin-top:10px;font-weight:800;color:var(--dark)">Glauco Araújo</p>
+    <p class="small muted">glaucoaraujop@gmail.com</p>
+  </div>
+
+  <div class="foot"><span>Wallacy Corretor — Proposta Comercial</span><span>5 / 5</span></div>
+</div>
+
+</body>
+</html>
