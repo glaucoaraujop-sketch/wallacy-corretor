@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wallacy Corretor · Calculadora de Lucro (Unit Economics)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: { brand:{50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b'}, ink:{50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',400:'#94a3b8',500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a'} } } } }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>body{font-family:'Inter',sans-serif} input[type=range]{accent-color:#059669}</style>
+</head>
+<body class="bg-ink-100 text-ink-800 min-h-screen">
+
+<div class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
+
+  <!-- header -->
+  <div class="flex items-center gap-3 mb-6">
+    <div class="w-11 h-11 rounded-xl bg-brand-600 grid place-items-center text-white text-xl font-bold">💰</div>
+    <div>
+      <h1 class="text-xl sm:text-2xl font-extrabold text-ink-900">Calculadora de Lucro — SaaS Wallacy Corretor</h1>
+      <p class="text-ink-400 text-sm">Mexa nos controles e veja sua margem por assinante e o lucro mensal em tempo real.</p>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-5 gap-5">
+
+    <!-- ===== CONTROLES ===== -->
+    <div class="lg:col-span-3 space-y-5">
+
+      <!-- Preço e clientes -->
+      <div class="bg-white rounded-2xl border border-ink-200 p-5">
+        <h2 class="font-bold text-ink-900 mb-4 flex items-center gap-2"><span class="w-6 h-6 rounded-lg bg-brand-50 grid place-items-center text-brand-700 text-sm">1</span> Receita</h2>
+
+        <label class="block mb-4">
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-ink-700">Preço da assinatura / mês</span><span id="vPreco" class="font-bold text-brand-600">R$ 197</span></div>
+          <input id="preco" type="range" min="49" max="397" step="10" value="197" class="w-full">
+          <div class="flex justify-between text-[11px] text-ink-400"><span>R$ 49</span><span>R$ 397</span></div>
+        </label>
+
+        <label class="block">
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-ink-700">Nº de assinantes</span><span id="vClientes" class="font-bold text-brand-600">50</span></div>
+          <input id="clientes" type="range" min="1" max="300" step="1" value="50" class="w-full">
+          <div class="flex justify-between text-[11px] text-ink-400"><span>1</span><span>300</span></div>
+        </label>
+      </div>
+
+      <!-- Custo WhatsApp -->
+      <div class="bg-white rounded-2xl border border-ink-200 p-5">
+        <h2 class="font-bold text-ink-900 mb-1 flex items-center gap-2"><span class="w-6 h-6 rounded-lg bg-emerald-50 grid place-items-center text-emerald-700 text-sm">2</span> Custo de WhatsApp por cliente</h2>
+        <p class="text-ink-400 text-xs mb-4">Responder cliente (24h) é grátis. O custo é só nos disparos que o corretor inicia.</p>
+
+        <label class="block mb-4">
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-ink-700">Disparos iniciados / cliente / mês</span><span id="vDisparos" class="font-bold text-emerald-700">120</span></div>
+          <input id="disparos" type="range" min="0" max="800" step="10" value="120" class="w-full">
+          <div class="flex justify-between text-[11px] text-ink-400"><span>0</span><span>800</span></div>
+        </label>
+
+        <label class="block">
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-ink-700">Custo médio por disparo</span><span id="vCustoMsg" class="font-bold text-emerald-700">R$ 0,12</span></div>
+          <input id="custoMsg" type="range" min="0" max="0.45" step="0.01" value="0.12" class="w-full">
+          <div class="flex justify-between text-[11px] text-ink-400"><span>R$ 0 (útil)</span><span>R$ 0,45 (mkt)</span></div>
+        </label>
+      </div>
+
+      <!-- Outros custos -->
+      <div class="bg-white rounded-2xl border border-ink-200 p-5">
+        <h2 class="font-bold text-ink-900 mb-1 flex items-center gap-2"><span class="w-6 h-6 rounded-lg bg-amber-50 grid place-items-center text-amber-700 text-sm">3</span> Outros custos</h2>
+        <p class="text-ink-400 text-xs mb-4">Infraestrutura por cliente + custos fixos da operação.</p>
+
+        <label class="block mb-4">
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-ink-700">Infra / cliente / mês (banco, hospedagem)</span><span id="vInfra" class="font-bold text-amber-700">R$ 4</span></div>
+          <input id="infra" type="range" min="0" max="30" step="1" value="4" class="w-full">
+          <div class="flex justify-between text-[11px] text-ink-400"><span>R$ 0</span><span>R$ 30</span></div>
+        </label>
+
+        <label class="block mb-4">
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-ink-700">Taxa de pagamento (gateway) %</span><span id="vTaxa" class="font-bold text-amber-700">5%</span></div>
+          <input id="taxa" type="range" min="0" max="10" step="0.5" value="5" class="w-full">
+          <div class="flex justify-between text-[11px] text-ink-400"><span>0%</span><span>10%</span></div>
+        </label>
+
+        <label class="block">
+          <div class="flex justify-between text-sm mb-1"><span class="font-semibold text-ink-700">Custos fixos / mês (você, marketing, ferramentas)</span><span id="vFixo" class="font-bold text-amber-700">R$ 500</span></div>
+          <input id="fixo" type="range" min="0" max="5000" step="100" value="500" class="w-full">
+          <div class="flex justify-between text-[11px] text-ink-400"><span>R$ 0</span><span>R$ 5.000</span></div>
+        </label>
+      </div>
+    </div>
+
+    <!-- ===== RESULTADO ===== -->
+    <div class="lg:col-span-2 space-y-5">
+
+      <div class="bg-gradient-to-br from-brand-600 to-brand-800 text-white rounded-2xl p-5 shadow-lg sticky top-5">
+        <p class="text-brand-100 text-xs font-semibold uppercase tracking-wide">Lucro líquido mensal</p>
+        <p id="rLucro" class="text-4xl font-extrabold mt-1">R$ 0</p>
+        <p id="rLucroAno" class="text-brand-200 text-sm mt-1">R$ 0 / ano</p>
+
+        <div class="h-px bg-white/20 my-4"></div>
+
+        <div class="space-y-2.5 text-sm">
+          <div class="flex justify-between"><span class="text-brand-100">Receita mensal</span><span id="rReceita" class="font-bold">R$ 0</span></div>
+          <div class="flex justify-between"><span class="text-brand-100">(–) Custos variáveis</span><span id="rVar" class="font-bold">R$ 0</span></div>
+          <div class="flex justify-between"><span class="text-brand-100">(–) Custos fixos</span><span id="rFixo" class="font-bold">R$ 0</span></div>
+        </div>
+      </div>
+
+      <!-- por cliente -->
+      <div class="bg-white rounded-2xl border border-ink-200 p-5">
+        <p class="text-xs font-bold text-ink-400 uppercase tracking-wide mb-3">Por assinante</p>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center"><span class="text-sm text-ink-600">Preço</span><span id="cPreco" class="font-bold text-ink-900">R$ 0</span></div>
+          <div class="flex justify-between items-center"><span class="text-sm text-ink-600">Custo (WhatsApp + infra + taxa)</span><span id="cCusto" class="font-bold text-rose-500">R$ 0</span></div>
+          <div class="flex justify-between items-center pt-2 border-t border-ink-100"><span class="text-sm font-semibold text-ink-700">Margem por cliente</span><span id="cMargem" class="font-extrabold text-brand-600">R$ 0</span></div>
+          <div class="flex justify-between items-center"><span class="text-sm text-ink-600">Margem %</span><span id="cMargemPct" class="font-bold text-brand-600">0%</span></div>
+        </div>
+        <div class="mt-4 h-3 bg-ink-100 rounded-full overflow-hidden flex">
+          <div id="barMargem" class="h-full bg-brand-500"></div>
+          <div id="barCusto" class="h-full bg-rose-300"></div>
+        </div>
+        <p class="text-[11px] text-ink-400 mt-1.5"><span class="inline-block w-2 h-2 bg-brand-500 rounded-full"></span> seu lucro · <span class="inline-block w-2 h-2 bg-rose-300 rounded-full"></span> custo</p>
+      </div>
+
+      <!-- ponto de equilibrio -->
+      <div class="bg-white rounded-2xl border border-ink-200 p-5">
+        <p class="text-xs font-bold text-ink-400 uppercase tracking-wide mb-2">Ponto de equilíbrio</p>
+        <p class="text-sm text-ink-600">Você cobre os custos fixos com</p>
+        <p id="rBreakeven" class="text-2xl font-extrabold text-ink-900 mt-1">0 assinantes</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="text-center text-ink-400 text-xs mt-8">Valores de referência editáveis · WhatsApp: respostas dentro de 24h são gratuitas; o custo incide nos disparos iniciados pelo corretor.</p>
+</div>
+
+<script>
+const ids = ['preco','clientes','disparos','custoMsg','infra','taxa','fixo'];
+const $ = id => document.getElementById(id);
+const brl = n => 'R$ ' + Math.round(n).toLocaleString('pt-BR');
+const brl2 = n => 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+function calc(){
+  const preco = +$('preco').value;
+  const clientes = +$('clientes').value;
+  const disparos = +$('disparos').value;
+  const custoMsg = +$('custoMsg').value;
+  const infra = +$('infra').value;
+  const taxaPct = +$('taxa').value/100;
+  const fixo = +$('fixo').value;
+
+  // labels controles
+  $('vPreco').textContent = brl(preco);
+  $('vClientes').textContent = clientes;
+  $('vDisparos').textContent = disparos;
+  $('vCustoMsg').textContent = brl2(custoMsg);
+  $('vInfra').textContent = brl(infra);
+  $('vTaxa').textContent = taxaPct*100 + '%';
+  $('vFixo').textContent = brl(fixo);
+
+  // custo por cliente
+  const custoWpp = disparos * custoMsg;
+  const custoTaxa = preco * taxaPct;
+  const custoCliente = custoWpp + infra + custoTaxa;
+  const margemCliente = preco - custoCliente;
+  const margemPct = preco>0 ? (margemCliente/preco*100) : 0;
+
+  // totais
+  const receita = preco * clientes;
+  const varTotal = custoCliente * clientes;
+  const lucro = receita - varTotal - fixo;
+  const breakeven = margemCliente>0 ? Math.ceil(fixo/margemCliente) : '∞';
+
+  // render resultado
+  $('rLucro').textContent = brl(lucro);
+  $('rLucroAno').textContent = brl(lucro*12) + ' / ano';
+  $('rReceita').textContent = brl(receita);
+  $('rVar').textContent = brl(varTotal);
+  $('rFixo').textContent = brl(fixo);
+
+  $('cPreco').textContent = brl(preco);
+  $('cCusto').textContent = brl2(custoCliente);
+  $('cMargem').textContent = brl2(margemCliente);
+  $('cMargemPct').textContent = Math.round(margemPct) + '%';
+
+  const mp = Math.max(0, Math.min(100, margemPct));
+  $('barMargem').style.width = mp + '%';
+  $('barCusto').style.width = (100-mp) + '%';
+
+  $('rBreakeven').textContent = (breakeven==='∞'?'∞':breakeven) + ' assinantes';
+
+  // cor do lucro
+  $('rLucro').className = 'text-4xl font-extrabold mt-1 ' + (lucro<0?'text-rose-200':'text-white');
+}
+ids.forEach(id => $(id).addEventListener('input', calc));
+calc();
+</script>
+</body>
+</html>
