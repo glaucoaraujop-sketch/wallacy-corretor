@@ -624,8 +624,32 @@ function openIntencao(){
   openSheet();
 }
 function salvarIntencao(){
-  closeSheet();
-  toast('Intenção salva! Avisarei quando entrar um imóvel que bata 🔔');
+  document.getElementById('sheetBody').innerHTML = `
+    <div class="p-5 text-center">
+      <div class="w-10 h-1 bg-ink-200 rounded-full mx-auto mb-4"></div>
+      <div class="w-16 h-16 rounded-full bg-brand-100 grid place-items-center mx-auto mb-3 animate-pulse"><i data-lucide="check" class="w-8 h-8 text-brand-600"></i></div>
+      <h3 class="font-extrabold text-ink-900 text-lg">Intenção salva!</h3>
+      <p class="text-ink-500 text-sm mt-1">A busca de <b>Larissa Couto</b> (apto até R$ 300 mil) está registrada.</p>
+
+      <div class="mt-5 rounded-2xl border border-brand-200 bg-brand-50 p-3.5 text-left">
+        <p class="text-[11px] font-bold text-brand-700 uppercase tracking-wide flex items-center gap-1.5 mb-2"><i data-lucide="sparkles" class="w-4 h-4"></i> E tem mais — já bate com 1 imóvel agora</p>
+        <div class="bg-white rounded-xl p-3 flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-200 to-purple-100 grid place-items-center shrink-0"><i data-lucide="building-2" class="w-6 h-6 text-white/80"></i></div>
+          <div class="flex-1 min-w-0">
+            <p class="font-bold text-ink-900 text-sm leading-tight">Apto 2 dorms · San Raphael</p>
+            <p class="text-ink-400 text-xs">R$ 295.000 · 68m² · #SR-991</p>
+          </div>
+          <span class="text-base font-extrabold text-brand-600 shrink-0">97%</span>
+        </div>
+      </div>
+
+      <button onclick="toast('Abrindo o WhatsApp na conversa de Larissa…')" class="mt-4 w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-xl py-3 text-sm flex items-center justify-center gap-2">
+        <i data-lucide="message-circle" class="w-4 h-4"></i> Enviar pra Larissa no WhatsApp
+      </button>
+      <button onclick="closeSheet(); go('whatsapp')" class="mt-2 w-full border border-ink-200 text-ink-600 font-medium rounded-xl py-2.5 text-sm">Ver em Envios</button>
+      <p class="text-ink-400 text-[11px] mt-3 flex items-center justify-center gap-1"><i data-lucide="bell" class="w-3.5 h-3.5"></i> Vou te avisar sempre que entrar um imóvel que bata com essa busca.</p>
+    </div>`;
+  refreshIcons();
 }
 
 /* compat: go() chama closeChat se existir */
